@@ -1,0 +1,5 @@
+[run]
+omit = koodi/main.py
+
+[report]
+show_missing = true

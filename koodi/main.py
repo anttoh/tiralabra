@@ -13,7 +13,7 @@ def main():
         if komento == 'q':
             break
 
-        elif komento == '1':
+        if komento == '1':
             koko = int(input('Koko: '))
             pulma = generoi_ratkaistava_pulma(koko)
             on_ratkaistavissa(pulma)
