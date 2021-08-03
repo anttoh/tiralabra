@@ -16,16 +16,22 @@ def main():
         if komento == '1':
             koko = int(input('Koko: '))
             pulma = generoi_ratkaistava_pulma(koko)
-            on_ratkaistavissa(pulma)
+            if on_ratkaistavissa(pulma):
+                print("Mahdollista ratkaista")
+                pulma.tulosta()
+            else:
+                print("Mahdoton ratkaista")
 
         elif komento == '2':
             lista = input('Lista: ')
             lista = lista.split(' ')
-            for i in range(len(lista)):
-                lista[i] = int(lista[i])
+            lista = list(map(int, lista))
 
             pulma = Pulma(lista)
-            on_ratkaistavissa(pulma)
+            if on_ratkaistavissa(pulma):
+                print("Mahdollista ratkaista")
+            else:
+                print("Mahdoton ratkaista")
 
         else:
             print('Tuntematon komento')

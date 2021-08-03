@@ -23,6 +23,26 @@ class Pulma:
                 self.__sijainti = i
                 break
 
+    def listaa(self) -> list:
+        """Palauttaa pulman sisällön listana"""
+
+        return self.__lista
+
+    def koko(self) -> int:
+        """Palauttaa pulman ruutujen määrän"""
+
+        return self.__koko
+
+    def leveys(self) -> int:
+        """Palauttaa pulman leveyden/korkeuden"""
+
+        return self.__leveys
+
+    def sijainti(self) -> int:
+        """Palauttaa pulman tyhjän ruudun sijainnin listassa"""
+
+        return self.__sijainti
+
     def vasen(self) -> bool:
         """Siirtää tyhjää ruutua vasemmalle, jos mahdollista"""
 
@@ -78,8 +98,3 @@ class Pulma:
             ruutu = "{:>{l}}".format(self.__lista[i], l=ruudun_leveys)
             print(ruutu, end='|')
         print()
-
-    def listaa(self) -> list:
-        """Palauttaa pulman sisällön listana"""
-
-        return self.__lista

@@ -1,8 +1,16 @@
-from koodi.tietorakenteet.pulma import Pulma
+from tietorakenteet.pulma import Pulma
 
 
 def pulma_testaukseen() -> Pulma:
     return Pulma([1, 2, 3, 4, 0, 5, 6, 7, 8])
+
+
+def test_getterit_toimivat():
+    pulma = pulma_testaukseen()
+    assert pulma.listaa() == [1, 2, 3, 4, 0, 5, 6, 7, 8]
+    assert pulma.koko() == 9
+    assert pulma.leveys() == 3
+    assert pulma.sijainti() == 4
 
 
 def test_vasen_toimii():
