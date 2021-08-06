@@ -1,3 +1,4 @@
+anybadge==1.7.0
 astroid==2.5.6
 attrs==21.2.0
 autopep8==1.5.7
