@@ -7,15 +7,18 @@ class Pulma:
     """Luokka pulman sisällön kuvaamiseen
 
     Luokka käyttää sisäisesti listaa pulman sisällön
-    tallentamiseen. Metodien vasen, oikea, ylos ja alas
+    tallentamiseen, mutta sisältö annetaan tuplena.
+    Metodien vasen, oikea, ylos ja alas
     nimet kuvaavat minne tyhjä ruutu liikkuisi ruudukossa."""
 
-    def __init__(self, lista):
-        self.__lista = lista
+    def __init__(self, sisalto: tuple, sijainti=-1):
+        self.__lista = list(sisalto)
         self.__koko = len(self.__lista)
         self.__leveys = int((sqrt(self.__koko)))
-        self.__sijainti = 0
-        self.__aseta_sijainti()
+        self.__sijainti = sijainti
+
+        if self.__sijainti == -1:
+            self.__aseta_sijainti()
 
     def __aseta_sijainti(self):
         for i in range(self.__koko):
@@ -98,3 +101,8 @@ class Pulma:
             ruutu = "{:>{l}}".format(self.__lista[i], l=ruudun_leveys)
             print(ruutu, end='|')
         print()
+
+    def tuplena(self) -> tuple:
+        """Palauttaa pulman sisällön tuplena"""
+
+        return tuple(self.__lista)

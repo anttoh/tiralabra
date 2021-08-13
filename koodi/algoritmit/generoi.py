@@ -7,20 +7,20 @@ from tietorakenteet.pulma import Pulma
 def generoi_ratkaistava_pulma(koko) -> Pulma:
     """Generoi ja palauttaa annetun kokoisen pulman"""
 
-    pulma = Pulma(__generoi_lista(koko))
+    pulma = Pulma(__generoi_tuple(koko))
     for _ in range(100000):
         __liikuta_satunnaisesti(pulma)
     return pulma
 
 
-def __generoi_lista(koko) -> list:
+def __generoi_tuple(koko) -> tuple:
     pituus = koko * koko
     lista = []
     for i in range(pituus):
         lista.append(i + 1)
     lista[pituus - 1] = 0
 
-    return lista
+    return tuple(lista)
 
 
 def __liikuta_satunnaisesti(pulma):

@@ -3,6 +3,7 @@
 from tietorakenteet.pulma import Pulma
 from algoritmit.ratkaistavissa import on_ratkaistavissa
 from algoritmit.generoi import generoi_ratkaistava_pulma
+from algoritmit.ratkaisija import IDAStar
 
 
 def main():
@@ -23,23 +24,54 @@ def main():
         if komento == '1':
             koko = int(input('Koko: '))
             pulma = generoi_ratkaistava_pulma(koko)
-            # ratkaise pulma
+            pulma.tulosta()
+            ratkaisija = IDAStar()
+            liikkeet = ratkaisija.ratkaise(pulma)
+            __tulosta_ratkaisu(pulma, liikkeet)
 
         elif komento == '2':
             lista = input('Lista: ')
             lista = lista.strip()
             lista = lista.split(' ')
             lista = list(map(int, lista))
-            pulma = Pulma(lista)
+            pulma = Pulma(tuple(lista))
             pulma.tulosta()
             if on_ratkaistavissa(pulma):
-                print("Mahdollista ratkaista")
-                # ratkaise pulma
+                ratkaisija = IDAStar()
+                liikkeet = ratkaisija.ratkaise(pulma)
+                __tulosta_ratkaisu(pulma, liikkeet)
             else:
-                print("Mahdoton ratkaista")
+                print('Mahdoton ratkaista')
 
         else:
             print('Tuntematon komento')
+
+
+def __tulosta_ratkaisu(pulma, liikkeet):
+    print('')
+    print('Ratkaisu:')
+    pulma.tulosta()
+    for liike in liikkeet:
+        print('')
+        if liike == 'y':
+            print('ylös')
+            pulma.ylos()
+            pulma.tulosta()
+        elif liike == 'a':
+            print('alas')
+            pulma.alas()
+            pulma.tulosta()
+        elif liike == 'v':
+            print('vasen')
+            pulma.vasen()
+            pulma.tulosta()
+        else:
+            print('oikea')
+            pulma.oikea()
+            pulma.tulosta()
+
+    print('')
+    print('Liikkeitä: ' + str(len(liikkeet)))
 
 
 if __name__ == "__main__":
