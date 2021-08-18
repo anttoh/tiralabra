@@ -1,9 +1,11 @@
 """Mooduli sisältää ohjelman päämetodin"""
 
-from tietorakenteet.pulma import Pulma
-from algoritmit.ratkaistavissa import on_ratkaistavissa
-from algoritmit.generoi import generoi_ratkaistava_pulma
+
+import time
 from algoritmit.ratkaisija import IDAStar
+from algoritmit.generoi import generoi_ratkaistava_pulma
+from algoritmit.ratkaistavissa import on_ratkaistavissa
+from tietorakenteet.pulma import Pulma
 
 
 def main():
@@ -26,8 +28,13 @@ def main():
             pulma = generoi_ratkaistava_pulma(koko)
             pulma.tulosta()
             ratkaisija = IDAStar()
+
+            alkoi = time.time()
             liikkeet = ratkaisija.ratkaise(pulma)
+            loppui = time.time()
+
             __tulosta_ratkaisu(pulma, liikkeet)
+            print("--- %s sekuntia ---" % (loppui - alkoi))
 
         elif komento == '2':
             lista = input('Lista: ')
@@ -38,8 +45,13 @@ def main():
             pulma.tulosta()
             if on_ratkaistavissa(pulma):
                 ratkaisija = IDAStar()
+
+                alkoi = time.time()
                 liikkeet = ratkaisija.ratkaise(pulma)
+                loppui = time.time()
+
                 __tulosta_ratkaisu(pulma, liikkeet)
+                print("--- %s sekuntia ---" % (loppui - alkoi))
             else:
                 print('Mahdoton ratkaista')
 

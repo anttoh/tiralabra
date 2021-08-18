@@ -1,6 +1,5 @@
 """Mooduli sisältää pulman ratkaisijan"""
 
-from math import sqrt
 from tietorakenteet.pulma import Pulma
 
 
@@ -10,12 +9,16 @@ class IDAStar:
     def __init__(self):
         self.ratkaistu_enum = object()
 
-        self.heuristiikka = heuristiikka_funktio(0)
-        self.naapurit = naapurit_funktio(self.heuristiikka)
         self.polku = []
         self.polku_liikkeet = []
-        self.on_polulla = {}
+        self.on_polulla = {()}
+
         self.maali = ()
+
+        self.heuristiikka = heuristiikka_funktio(1, self.maali)
+
+        self.naapurit = naapurit_funktio(self.heuristiikka)
+
         self.raja = 0
 
     def ratkaise(self, pulma) -> list:
@@ -23,18 +26,22 @@ class IDAStar:
         palauttaa listan, joka sisältää liikkeet, jotka johtavat
         pulman alkutilasta pulman ratkaistuun tilaan."""
 
-        koko = pulma.koko()
         juuri = pulma.tuplena()
 
-        self.heuristiikka = heuristiikka_funktio(koko)
-        self.naapurit = naapurit_funktio(self.heuristiikka)
         self.polku = [juuri]
         self.polku_liikkeet = []
         self.on_polulla = {juuri}
-        self.raja = self.heuristiikka(juuri)
-        self.maali = list(range(1, koko + 1))
+
+        self.maali = list(range(1, pulma.koko() + 1))
         self.maali[pulma.koko() - 1] = 0
         self.maali = tuple(self.maali)
+
+        self.heuristiikka = heuristiikka_funktio(
+            pulma.leveys(), self.maali)
+
+        self.naapurit = naapurit_funktio(self.heuristiikka)
+
+        self.raja = self.heuristiikka(juuri)
 
         while True:
             t = self.__haku(0)
@@ -81,7 +88,7 @@ class IDAStar:
 def naapurit_funktio(heuristiikka):
     """Tämä funktio palauttaa funktion n, joka palauttaa noodin naapurit"""
 
-    def n(noodi: tuple) -> list:
+    def __n(noodi: tuple) -> list:
         """Funktio palauttaa listan annetun noodin (Pulman tilan) naapureista,
         eli tiloista joihin annetusta noodista pääsee yhdellä liikkeellä.
         Lista järjestetään annetun heuristiikan mukaan."""
@@ -106,60 +113,92 @@ def naapurit_funktio(heuristiikka):
 
         return naapurit
 
-    return n
+    return __n
 
 
-# tätä tulee parantaa...
-def heuristiikka_funktio(koko: int):
-    """Tämä funktio palauttaa heuristikka funktion h"""
+def heuristiikka_funktio(n: int, maali: tuple):
+    """Tämä funktio palauttaa heuristikka funktion h.
+    Parametreina ovat pulman leveys/korkeus n
+    ja pulman ratkaistu tila tuplena"""
 
-    leveys = int(sqrt(koko))
+    walking_distance = __luo_walking_distance_taulu(n)
+    oikeat_ruudut = {i: maali.index(i) for i in maali}
 
-    def h(noodi: tuple) -> int:
-        """Heuristiikka funktio, joka laskee pulman ruutujen
-        manhattan etäisyyksiä niiden lopullisiin paikkoihin nähden,
-        sekä rivien ja sarakkeiden lineaari konflikteja."""
+    def __h(noodi: tuple) -> int:
+        """Walking distance heuristiikka"""
 
-        etaisyydet = 0
-        rivit = [[]]*leveys
-        sarakkeet = [[]]*leveys
-        for i in range(koko):
-            luku = noodi[i]
-            y1 = int(i / leveys)
-            x1 = int(i % leveys)
-            y2 = int(luku / leveys)
-            x2 = int(luku % leveys)
-            etaisyys = abs(y2 - y1) + abs(x2 - x1)
-            etaisyydet += etaisyys
+        vaaka = [0]*n*n
+        pysty = [0]*n*n
+        etaisyys = 0
 
-            if y1 == y2 and x1 != x2:
-                sarakkeet[y1].append(luku)
-
-            if x1 == x2 and y1 != y2:
-                rivit[x1].append(luku)
-
-        for i in range(leveys):
-            rivi = rivit[i]
-            pituus = len(rivi)
-            if pituus < 2:
+        for i, luku in enumerate(noodi):
+            if luku == 0:
                 continue
-            edellinen = rivi[0]
-            for j in range(1, pituus):
-                if rivi[j] < edellinen:
-                    etaisyydet += 2
-                edellinen = rivi[j]
 
-        for i in range(leveys):
-            sarake = sarakkeet[i]
-            pituus = len(sarake)
-            if pituus < 2:
+            oikea_ruutu = oikeat_ruudut[luku]
+            x_nykyinen = i % n
+            y_nykyinen = i // n
+            x_oikea = oikea_ruutu % n
+            y_oikea = oikea_ruutu // n
+            vaaka[n * y_nykyinen + y_oikea] += 1
+            pysty[n * x_nykyinen + x_oikea] += 1
+
+            if y_nykyinen == y_oikea:
+                for k in range(i + 1, i - i % n + n):
+                    if (
+                        noodi[k]
+                        and oikeat_ruudut[noodi[k]] // n == y_nykyinen
+                        and oikeat_ruudut[noodi[k]] < oikea_ruutu
+                    ):
+                        etaisyys += 2
+
+            if x_nykyinen == x_oikea:
+                for k in range(i + n, n * n, n):
+                    if (
+                        noodi[k]
+                        and oikeat_ruudut[noodi[k]] % n == x_nykyinen
+                        and oikeat_ruudut[noodi[k]] < oikea_ruutu
+                    ):
+                        etaisyys += 2
+
+        etaisyys += walking_distance[tuple(vaaka)]
+        etaisyys += walking_distance[tuple(pysty)]
+
+        return etaisyys
+
+    return __h
+
+
+def __luo_walking_distance_taulu(n: int) -> dict:
+    """Luo ja palauttaa walking distance taulun"""
+
+    maali_konfiguraatio = [0]*n*n
+    for i in range(0, n*n, n+1):
+        maali_konfiguraatio[i] = n
+    maali_konfiguraatio[n*n-1] -= 1
+
+    maali_konfiguraatio = tuple(maali_konfiguraatio)
+
+    taulu = {}
+    vieraile = [(maali_konfiguraatio, 0, n-1)]
+
+    while vieraile:
+        konfiguraatio, hinta, rivi = vieraile.pop(0)
+        if konfiguraatio in taulu:
+            continue
+
+        taulu[konfiguraatio] = hinta
+
+        for i in [-1, 1]:
+            r = rivi + i
+            if r < 0 or r >= n:
                 continue
-            edellinen = sarake[0]
-            for j in range(1, pituus):
-                if sarake[j] < edellinen:
-                    etaisyydet += 2
-                edellinen = sarake[j]
 
-        return etaisyydet
+            for j in range(n):
+                if konfiguraatio[n*r + j] > 0:
+                    konf = list(konfiguraatio)
+                    konf[n*r + j] -= 1
+                    konf[n*rivi + j] += 1
+                    vieraile.append((tuple(konf), hinta + 1, r))
 
-    return h
+    return taulu
