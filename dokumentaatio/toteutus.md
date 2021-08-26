@@ -4,8 +4,8 @@ Ohjelman olennaisin osa on pulman (8 tai 15-peli) ratkaisija algoritmi, joka lö
 
 Lähteitä:
 
-[https://web.archive.org/web/20141224035932/http://juropollo.xe0.ru:80/stp_wd_translation_en.htm]
+https://web.archive.org/web/20141224035932/http://juropollo.xe0.ru:80/stp_wd_translation_en.htm
 
-[http://www.ic-net.or.jp/home/takaken/e/15pz/wd.gif]
+http://www.ic-net.or.jp/home/takaken/e/15pz/wd.gif
 
-[https://rosettacode.org/wiki/15_puzzle_solver#Iterative_Depth_A.2A]
+https://rosettacode.org/wiki/15_puzzle_solver#Iterative_Depth_A.2A
