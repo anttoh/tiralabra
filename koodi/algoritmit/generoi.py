@@ -7,7 +7,7 @@ from tietorakenteet.pulma import Pulma
 def generoi_ratkaistava_pulma(koko) -> Pulma:
     """Generoi ja palauttaa annetun kokoisen pulman"""
 
-    pulma = Pulma(__generoi_tuple(koko))
+    pulma = Pulma(__generoi_tuple(koko), koko*koko-1)
     for _ in range(100000):
         __liikuta_satunnaisesti(pulma)
     return pulma
@@ -26,10 +26,22 @@ def __generoi_tuple(koko) -> tuple:
 def __liikuta_satunnaisesti(pulma):
     luku = randint(0, 3)
     if luku == 0:
-        pulma.vasen()
+        if pulma.voi_liikkua_vasenmalle():
+            pulma.liiku_vasenmalle()
+        else:
+            pulma.liiku_oikealle()
     elif luku == 1:
-        pulma.oikea()
+        if pulma.voi_liikkua_oikealle():
+            pulma.liiku_oikealle()
+        else:
+            pulma.liiku_vasenmalle()
     elif luku == 2:
-        pulma.ylos()
+        if pulma.voi_liikkua_ylospain():
+            pulma.liiku_ylospain()
+        else:
+            pulma.liiku_alaspain()
     else:
-        pulma.alas()
+        if pulma.voi_liikkua_alaspain():
+            pulma.liiku_alaspain()
+        else:
+            pulma.liiku_ylospain()

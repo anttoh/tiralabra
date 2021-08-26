@@ -12,6 +12,7 @@ class IDAStar:
         self.polku = []
         self.polku_liikkeet = []
         self.on_polulla = {()}
+        self.sijainnit = []
 
         self.maali = ()
 
@@ -31,6 +32,7 @@ class IDAStar:
         self.polku = [juuri]
         self.polku_liikkeet = []
         self.on_polulla = {juuri}
+        self.sijainnit = [pulma.sijainti()]
 
         self.maali = list(range(1, pulma.koko() + 1))
         self.maali[pulma.koko() - 1] = 0
@@ -62,13 +64,14 @@ class IDAStar:
             return self.ratkaistu_enum
 
         minimi = float('inf')
-        for seuraava, liike in self.naapurit(noodi):
+        for seuraava, sijainti, liike in self.naapurit(noodi, self.sijainnit[-1]):
             if seuraava in self.on_polulla:
                 continue
 
             self.polku.append(seuraava)
             self.polku_liikkeet.append(liike)
             self.on_polulla.add(seuraava)
+            self.sijainnit.append(sijainti)
 
             t = self.__haku(g + 1)
 
@@ -81,6 +84,7 @@ class IDAStar:
             self.polku.pop()
             self.polku_liikkeet.pop()
             self.on_polulla.remove(seuraava)
+            self.sijainnit.pop()
 
         return minimi
 
@@ -88,26 +92,31 @@ class IDAStar:
 def naapurit_funktio(heuristiikka):
     """Tämä funktio palauttaa funktion n, joka palauttaa noodin naapurit"""
 
-    def __n(noodi: tuple) -> list:
+    def __n(noodi: tuple, sijainti: int) -> list:
         """Funktio palauttaa listan annetun noodin (Pulman tilan) naapureista,
         eli tiloista joihin annetusta noodista pääsee yhdellä liikkeellä.
-        Lista järjestetään annetun heuristiikan mukaan."""
+        Lista järjestetään annetun heuristiikan mukaan. Sijainti on
+        tyhjän ruudun (luvun 0) siijainti """
 
-        pulma = Pulma(noodi)
+        pulma = Pulma(noodi, sijainti)
 
         naapurit = []
-        if pulma.ylos():
-            naapurit.append((pulma.tuplena(), 'y'))
-            pulma.alas()
-        if pulma.alas():
-            naapurit.append((pulma.tuplena(), 'a'))
-            pulma.ylos()
-        if pulma.vasen():
-            naapurit.append((pulma.tuplena(), 'v'))
-            pulma.oikea()
-        if pulma.oikea():
-            naapurit.append((pulma.tuplena(), 'o'))
-            pulma.vasen()
+        if pulma.voi_liikkua_ylospain():
+            pulma.liiku_ylospain()
+            naapurit.append((pulma.tuplena(), pulma.sijainti(), 'y'))
+            pulma.liiku_alaspain()
+        if pulma.voi_liikkua_alaspain():
+            pulma.liiku_alaspain()
+            naapurit.append((pulma.tuplena(), pulma.sijainti(), 'a'))
+            pulma.liiku_ylospain()
+        if pulma.voi_liikkua_vasenmalle():
+            pulma.liiku_vasenmalle()
+            naapurit.append((pulma.tuplena(), pulma.sijainti(), 'v'))
+            pulma.liiku_oikealle()
+        if pulma.voi_liikkua_oikealle():
+            pulma.liiku_oikealle()
+            naapurit.append((pulma.tuplena(), pulma.sijainti(), 'o'))
+            pulma.liiku_vasenmalle()
 
         naapurit.sort(key=lambda naapuri: heuristiikka(naapuri[0]))
 

@@ -1,4 +1,3 @@
-from tietorakenteet.pulma import Pulma
 from algoritmit.ratkaistavissa import on_ratkaistavissa
 from algoritmit.generoi import generoi_ratkaistava_pulma
 

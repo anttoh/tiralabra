@@ -45,7 +45,7 @@ def main():
             lista = lista.strip()
             lista = lista.split(' ')
             lista = list(map(int, lista))
-            pulma = Pulma(tuple(lista))
+            pulma = Pulma(tuple(lista), __tyhjan_sijainti(lista))
             pulma.tulosta()
             if on_ratkaistavissa(pulma):
                 ratkaisija = IDAStar()
@@ -71,23 +71,29 @@ def __tulosta_ratkaisu(pulma, liikkeet):
         print('')
         if liike == 'y':
             print('ylös')
-            pulma.ylos()
+            pulma.liiku_ylospain()
             pulma.tulosta()
         elif liike == 'a':
             print('alas')
-            pulma.alas()
+            pulma.liiku_alaspain()
             pulma.tulosta()
         elif liike == 'v':
             print('vasen')
-            pulma.vasen()
+            pulma.liiku_vasenmalle()
             pulma.tulosta()
         else:
             print('oikea')
-            pulma.oikea()
+            pulma.liiku_oikealle()
             pulma.tulosta()
 
     print('')
     print('Liikkeitä: ' + str(len(liikkeet)))
+
+
+def __tyhjan_sijainti(lista: list) -> int:
+    for i in range(len(lista)):
+        if lista[i] == 0:
+            return i
 
 
 if __name__ == "__main__":

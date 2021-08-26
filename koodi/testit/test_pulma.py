@@ -2,39 +2,41 @@ from tietorakenteet.pulma import Pulma
 
 
 def pulma_testaukseen() -> Pulma:
-    return Pulma([1, 2, 3, 4, 0, 5, 6, 7, 8])
+    return Pulma([1, 2, 3, 4, 0, 5, 6, 7, 8], 4)
 
 
 def test_getterit_toimivat():
     pulma = pulma_testaukseen()
-    assert pulma.listaa() == [1, 2, 3, 4, 0, 5, 6, 7, 8]
     assert pulma.koko() == 9
     assert pulma.leveys() == 3
     assert pulma.sijainti() == 4
+    assert pulma.tuplena() == (1, 2, 3, 4, 0, 5, 6, 7, 8)
 
 
-def test_vasen_toimii():
+def test_liikkuminen():
     pulma = pulma_testaukseen()
-    assert pulma.vasen()
-    assert not pulma.vasen()
 
+    assert pulma.voi_liikkua_vasenmalle()
+    pulma.liiku_vasenmalle()
+    assert not pulma.voi_liikkua_vasenmalle()
+    pulma.liiku_oikealle()
 
-def test_oikea_toimii():
-    pulma = pulma_testaukseen()
-    assert pulma.oikea()
-    assert not pulma.oikea()
+    assert pulma.voi_liikkua_oikealle()
+    pulma.liiku_oikealle()
+    assert not pulma.voi_liikkua_oikealle()
+    pulma.liiku_vasenmalle()
 
+    assert pulma.voi_liikkua_ylospain()
+    pulma.liiku_ylospain()
+    assert not pulma.voi_liikkua_ylospain()
+    pulma.liiku_alaspain()
 
-def test_ylos_toimii():
-    pulma = pulma_testaukseen()
-    assert pulma.ylos()
-    assert not pulma.ylos()
+    assert pulma.voi_liikkua_alaspain()
+    pulma.liiku_alaspain()
+    assert not pulma.voi_liikkua_alaspain()
+    pulma.liiku_ylospain()
 
-
-def test_alas_toimii():
-    pulma = pulma_testaukseen()
-    assert pulma.alas()
-    assert not pulma.alas()
+    assert pulma.tuplena() == (1, 2, 3, 4, 0, 5, 6, 7, 8)
 
 
 def test_tulosta_tulostaa_pulman_ruudukkona(capsys):

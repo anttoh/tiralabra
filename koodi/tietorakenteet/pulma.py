@@ -8,28 +8,20 @@ class Pulma:
 
     Luokka käyttää sisäisesti listaa pulman sisällön
     tallentamiseen, mutta sisältö annetaan tuplena.
+    Sijainti tarkoittaa tyhjän ruudun eli luvun 0 sijaintia annetussa tuplessa.
     Metodien vasen, oikea, ylos ja alas
     nimet kuvaavat minne tyhjä ruutu liikkuisi ruudukossa."""
 
-    def __init__(self, sisalto: tuple, sijainti=-1):
+    def __init__(self, sisalto: tuple, sijainti: int):
         self.__lista = list(sisalto)
         self.__koko = len(self.__lista)
         self.__leveys = int((sqrt(self.__koko)))
         self.__sijainti = sijainti
 
-        if self.__sijainti == -1:
-            self.__aseta_sijainti()
+    def tuplena(self) -> tuple:
+        """Palauttaa pulman sisällön tuplena"""
 
-    def __aseta_sijainti(self):
-        for i in range(self.__koko):
-            if self.__lista[i] == 0:
-                self.__sijainti = i
-                break
-
-    def listaa(self) -> list:
-        """Palauttaa pulman sisällön listana"""
-
-        return self.__lista
+        return tuple(self.__lista)
 
     def koko(self) -> int:
         """Palauttaa pulman ruutujen määrän"""
@@ -46,49 +38,53 @@ class Pulma:
 
         return self.__sijainti
 
-    def vasen(self) -> bool:
-        """Siirtää tyhjää ruutua vasemmalle, jos mahdollista"""
+    def voi_liikkua_vasenmalle(self) -> bool:
+        """Palauttaa true, jos tyhjää ruutua voi siirtä vasemmalle"""
 
-        if self.__sijainti % self.__leveys == 0:
-            return False
+        return self.__sijainti % self.__leveys != 0
+
+    def voi_liikkua_oikealle(self) -> bool:
+        """Palauttaa true, jos tyhjää ruutua voi siirtä oikealle"""
+
+        return (self.__sijainti + 1) % self.__leveys != 0
+
+    def voi_liikkua_ylospain(self) -> bool:
+        """Palauttaa true, jos tyhjää ruutua voi siirtä ylöspäin"""
+
+        return self.__sijainti - self.__leveys >= 0
+
+    def voi_liikkua_alaspain(self) -> bool:
+        """Palauttaa true, jos tyhjää ruutua voi siirtä alaspäin"""
+
+        return self.__sijainti + self.__leveys < self.__koko
+
+    def liiku_vasenmalle(self):
+        """Siirtää tyhjää ruutua vasemmalle"""
 
         self.__lista[self.__sijainti] = self.__lista[self.__sijainti - 1]
         self.__lista[self.__sijainti - 1] = 0
         self.__sijainti -= 1
-        return True
 
-    def oikea(self) -> bool:
-        """Siirtää tyhjää ruutua oikealle, jos mahdollista"""
-
-        if (self.__sijainti + 1) % self.__leveys == 0:
-            return False
+    def liiku_oikealle(self):
+        """Siirtää tyhjää ruutua oikealle"""
 
         self.__lista[self.__sijainti] = self.__lista[self.__sijainti + 1]
         self.__lista[self.__sijainti + 1] = 0
         self.__sijainti += 1
-        return True
 
-    def ylos(self) -> bool:
-        """Siirtää tyhjää ruutua ylöspäin, jos mahdollista"""
-
-        if self.__sijainti - self.__leveys < 0:
-            return False
+    def liiku_ylospain(self):
+        """Siirtää tyhjää ruutua ylöspäin"""
 
         self.__lista[self.__sijainti] = self.__lista[self.__sijainti - self.__leveys]
         self.__lista[self.__sijainti - self.__leveys] = 0
         self.__sijainti -= self.__leveys
-        return True
 
-    def alas(self) -> bool:
-        """Siirtää tyhjää ruutua alaspäin, jos mahdollista"""
-
-        if self.__sijainti + self.__leveys >= self.__koko:
-            return False
+    def liiku_alaspain(self):
+        """Siirtää tyhjää ruutua alaspäin"""
 
         self.__lista[self.__sijainti] = self.__lista[self.__sijainti + self.__leveys]
         self.__lista[self.__sijainti + self.__leveys] = 0
         self.__sijainti += self.__leveys
-        return True
 
     def tulosta(self):
         """Tulostaa pulman sisällön taulukkona"""
@@ -101,8 +97,3 @@ class Pulma:
             ruutu = "{:>{l}}".format(self.__lista[i], l=ruudun_leveys)
             print(ruutu, end='|')
         print()
-
-    def tuplena(self) -> tuple:
-        """Palauttaa pulman sisällön tuplena"""
-
-        return tuple(self.__lista)

@@ -33,7 +33,7 @@ def __inversiot(pulma) -> int:
     # tätä voi tehostaa, jos on tarvetta
 
     inversiot = 0
-    lista = pulma.listaa()
+    lista = pulma.tuplena()
 
     for i in range(pulma.koko()):
         for j in range(i + 1, pulma.koko()):
