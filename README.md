@@ -9,6 +9,12 @@ Ratkaisija peliin, jonka tunnetuin variaatio on 15-peli.
 
 [Määrittelydokumentti](./dokumentaatio/maarittely.md)
 
+[Toteutusdokumentti](./dokumentaatio/toteutus.md)
+
+[Testausdokumentti](./dokumentaatio/testaus.md)
+
+[Käyttöohje](./dokumentaatio/kaytto.md)
+
 ## Viikkoraportit
 
 [Viikko 1](./dokumentaatio/viikko1.md)

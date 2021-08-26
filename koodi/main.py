@@ -12,9 +12,10 @@ def main():
     """Ohjelman päämetodi"""
 
     info = """Komenntot:
+        h = listaa komennot
         q = lopettaa ohjelman
-        1 = luo annetun levyisen pulman
-        2 = yrittää luoda pulman annetusta listasta lukuja"""
+        1 = luo annetun levyisen ja korkuisen pulman
+        2 = yrittää luoda pulman annetusta listasta lukuja, esim. 8 6 7 2 5 4 3 0 1"""
 
     print(info)
 
@@ -23,7 +24,10 @@ def main():
         if komento == 'q':
             break
 
-        if komento == '1':
+        if komento == 'h':
+            print(info)
+
+        elif komento == '1':
             koko = int(input('Koko: '))
             pulma = generoi_ratkaistava_pulma(koko)
             pulma.tulosta()
