@@ -91,7 +91,7 @@ def __tulosta_ratkaisu(pulma, liikkeet):
 
 
 def __tyhjan_sijainti(lista: list) -> int:
-    for i in range(len(lista)):
+    for i in lista:
         if lista[i] == 0:
             return i
 

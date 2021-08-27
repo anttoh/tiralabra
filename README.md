@@ -26,3 +26,5 @@ Ratkaisija peliin, jonka tunnetuin variaatio on 15-peli.
 [Viikko 4](./dokumentaatio/viikko4.md)
 
 [Viikko 5](./dokumentaatio/viikko5.md)
+
+[Viikko 6](./dokumentaatio/viikko6.md)
