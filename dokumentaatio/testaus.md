@@ -20,7 +20,8 @@ Pisimmillään lyhimmän polun pituus on 80 liikettä, jolloin ratkaisun löytä
 
 8-pelin, eli 3x3 pulman pisin mahdollinen lyhimmän polun pituus on 31. Alla on ainoat laudat, joiden lyhimmän polun pituus on 31.
 
-8 6 7 2 5 4 3 0 1
+8 6 7 2 5 4 3 0 1 
+
 6 4 7 8 5 0 3 2 1
 
 Molempien kohdalla ratkaisuun kului vain n 0.15 sekuntia. Testaillessani ohjelman satunnaisesti tuottamia 3x3 pulmia, en törmännyt yhteenkään pulmaan, jonka ratkaisemiseen olisi kulunut yli 0.15 sekuntia.
