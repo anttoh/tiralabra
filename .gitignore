@@ -5,3 +5,6 @@ __pycache__
 venv
 .coverage
 coverage.xml
+build
+dist
+n-puzzle-solver.spec
