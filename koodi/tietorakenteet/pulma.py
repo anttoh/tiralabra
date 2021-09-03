@@ -14,19 +14,13 @@ class Pulma:
 
     def __init__(self, sisalto: tuple, sijainti: int):
         self.__lista = list(sisalto)
-        self.__koko = len(self.__lista)
-        self.__leveys = int((sqrt(self.__koko)))
+        self.__leveys = int((sqrt(len(sisalto))))
         self.__sijainti = sijainti
 
     def tuplena(self) -> tuple:
         """Palauttaa pulman sisällön tuplena"""
 
         return tuple(self.__lista)
-
-    def koko(self) -> int:
-        """Palauttaa pulman ruutujen määrän"""
-
-        return self.__koko
 
     def leveys(self) -> int:
         """Palauttaa pulman leveyden/korkeuden"""
@@ -56,7 +50,7 @@ class Pulma:
     def voi_liikkua_alaspain(self) -> bool:
         """Palauttaa true, jos tyhjää ruutua voi siirtä alaspäin"""
 
-        return self.__sijainti + self.__leveys < self.__koko
+        return self.__sijainti + self.__leveys < self.__leveys * self.__leveys
 
     def liiku_vasenmalle(self):
         """Siirtää tyhjää ruutua vasemmalle"""
@@ -89,8 +83,9 @@ class Pulma:
     def tulosta(self):
         """Tulostaa pulman sisällön taulukkona"""
 
-        ruudun_leveys = len(str(self.__koko))
-        for i in range(self.__koko):
+        pituus = self.__leveys * self.__leveys
+        ruudun_leveys = len(str(pituus))
+        for i in range(pituus):
             if i % self.__leveys == 0:
                 print()
                 print(end='|')

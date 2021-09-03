@@ -7,7 +7,6 @@ def pulma_testaukseen() -> Pulma:
 
 def test_getterit_toimivat():
     pulma = pulma_testaukseen()
-    assert pulma.koko() == 9
     assert pulma.leveys() == 3
     assert pulma.sijainti() == 4
     assert pulma.tuplena() == (1, 2, 3, 4, 0, 5, 6, 7, 8)

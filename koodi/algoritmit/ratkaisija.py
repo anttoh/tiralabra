@@ -7,20 +7,20 @@ class IDAStar:
     """Iterative deepening A* algoritmin toteutus"""
 
     def __init__(self):
-        self.ratkaistu_enum = object()
+        self.__ratkaistu_enum = object()
 
-        self.polku = []
-        self.polku_liikkeet = []
-        self.on_polulla = {()}
-        self.sijainnit = []
+        self.__polku = []
+        self.__polku_liikkeet = []
+        self.__on_polulla = {()}
+        self.__sijainnit = []
 
-        self.maali = ()
+        self.__maali = ()
 
-        self.heuristiikka = heuristiikka_funktio(1, self.maali)
+        self.__heuristiikka = heuristiikka_funktio(1, self.__maali)
 
-        self.naapurit = naapurit_funktio(self.heuristiikka)
+        self.__naapurit = naapurit_funktio(self.__heuristiikka)
 
-        self.raja = 0
+        self.__raja = 0
 
     def ratkaise(self, pulma) -> list:
         """Ratkaisee annetun pulman IDA* algoritmin avulla ja
@@ -29,62 +29,63 @@ class IDAStar:
 
         juuri = pulma.tuplena()
 
-        self.polku = [juuri]
-        self.polku_liikkeet = []
-        self.on_polulla = {juuri}
-        self.sijainnit = [pulma.sijainti()]
+        self.__polku = [juuri]
+        self.__polku_liikkeet = []
+        self.__on_polulla = {juuri}
+        self.__sijainnit = [pulma.sijainti()]
 
-        self.maali = list(range(1, pulma.koko() + 1))
-        self.maali[pulma.koko() - 1] = 0
-        self.maali = tuple(self.maali)
+        pituus = pulma.leveys() * pulma.leveys()
+        self.__maali = list(range(1, pituus + 1))
+        self.__maali[pituus - 1] = 0
+        self.__maali = tuple(self.__maali)
 
-        self.heuristiikka = heuristiikka_funktio(
-            pulma.leveys(), self.maali)
+        self.__heuristiikka = heuristiikka_funktio(
+            pulma.leveys(), self.__maali)
 
-        self.naapurit = naapurit_funktio(self.heuristiikka)
+        self.__naapurit = naapurit_funktio(self.__heuristiikka)
 
-        self.raja = self.heuristiikka(juuri)
+        self.__raja = self.__heuristiikka(juuri)
 
         while True:
             t = self.__haku(0)
 
-            if t == self.ratkaistu_enum:
-                return self.polku_liikkeet
+            if t == self.__ratkaistu_enum:
+                return self.__polku_liikkeet
 
-            self.raja = t
+            self.__raja = t
 
     def __haku(self, g: int) -> object:
-        noodi = self.polku[-1]
-        f = g + self.heuristiikka(noodi)
+        noodi = self.__polku[-1]
+        f = g + self.__heuristiikka(noodi)
 
-        if f > self.raja:
+        if f > self.__raja:
             return f
 
-        if noodi == self.maali:
-            return self.ratkaistu_enum
+        if noodi == self.__maali:
+            return self.__ratkaistu_enum
 
         minimi = float('inf')
-        for seuraava, sijainti, liike in self.naapurit(noodi, self.sijainnit[-1]):
-            if seuraava in self.on_polulla:
+        for seuraava, sijainti, liike in self.__naapurit(noodi, self.__sijainnit[-1]):
+            if seuraava in self.__on_polulla:
                 continue
 
-            self.polku.append(seuraava)
-            self.polku_liikkeet.append(liike)
-            self.on_polulla.add(seuraava)
-            self.sijainnit.append(sijainti)
+            self.__polku.append(seuraava)
+            self.__polku_liikkeet.append(liike)
+            self.__on_polulla.add(seuraava)
+            self.__sijainnit.append(sijainti)
 
             t = self.__haku(g + 1)
 
-            if t == self.ratkaistu_enum:
-                return self.ratkaistu_enum
+            if t == self.__ratkaistu_enum:
+                return self.__ratkaistu_enum
 
             if t < minimi:
                 minimi = t
 
-            self.polku.pop()
-            self.polku_liikkeet.pop()
-            self.on_polulla.remove(seuraava)
-            self.sijainnit.pop()
+            self.__polku.pop()
+            self.__polku_liikkeet.pop()
+            self.__on_polulla.remove(seuraava)
+            self.__sijainnit.pop()
 
         return minimi
 
@@ -132,12 +133,13 @@ def heuristiikka_funktio(n: int, maali: tuple):
 
     walking_distance = __luo_walking_distance_taulu(n)
     oikeat_ruudut = {i: maali.index(i) for i in maali}
+    nn = n*n
 
     def __h(noodi: tuple) -> int:
         """Walking distance heuristiikka"""
 
-        vaaka = [0]*n*n
-        pysty = [0]*n*n
+        vaaka = [0]*nn
+        pysty = [0]*nn
         etaisyys = 0
 
         for i, luku in enumerate(noodi):
@@ -181,10 +183,11 @@ def heuristiikka_funktio(n: int, maali: tuple):
 def __luo_walking_distance_taulu(n: int) -> dict:
     """Luo ja palauttaa walking distance taulun"""
 
-    maali_konfiguraatio = [0]*n*n
-    for i in range(0, n*n, n+1):
+    nn = n*n
+    maali_konfiguraatio = [0]*nn
+    for i in range(0, nn, n+1):
         maali_konfiguraatio[i] = n
-    maali_konfiguraatio[n*n-1] -= 1
+    maali_konfiguraatio[nn-1] -= 1
 
     maali_konfiguraatio = tuple(maali_konfiguraatio)
 

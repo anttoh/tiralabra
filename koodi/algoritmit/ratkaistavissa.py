@@ -34,9 +34,10 @@ def __inversiot(pulma) -> int:
 
     inversiot = 0
     lista = pulma.tuplena()
+    pituus = len(lista)
 
-    for i in range(pulma.koko()):
-        for j in range(i + 1, pulma.koko()):
+    for i in range(pituus):
+        for j in range(i + 1, pituus):
             if(lista[i] and lista[j] and lista[i] > lista[j]):
                 inversiot += 1
 
